@@ -16,7 +16,7 @@ public class IdentifierAdapter extends TypeAdapter<Identifier> {
 			return null;
 		}
 
-		return new Identifier(in.nextString());
+		return Identifier.of(in.nextString());
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import net.minecraft.component.type.MapIdComponent;
+import net.minecraft.world.dimension.PortalForcer;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -87,7 +89,6 @@ import net.minecraft.world.Heightmap.Type;
 import net.minecraft.world.LightType;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.PortalForcer;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
@@ -581,12 +582,12 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public void emitGameEvent(Entity entity, GameEvent event, Vec3d pos) {
+	public void emitGameEvent(Entity entity, RegistryEntry<GameEvent> event, Vec3d pos) {
 		delegate().emitGameEvent(entity, event, pos);
 	}
 
 	@Override
-	public void emitGameEvent(Entity entity, GameEvent event, BlockPos pos) {
+	public void emitGameEvent(Entity entity, RegistryEntry<GameEvent> event, BlockPos pos) {
 		delegate().emitGameEvent(entity, event, pos);
 	}
 
@@ -608,7 +609,7 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public void emitGameEvent(GameEvent event, BlockPos pos, Emitter emitter) {
+	public void emitGameEvent(RegistryEntry<GameEvent> event, BlockPos pos, Emitter emitter) {
 		delegate().emitGameEvent(event, pos, emitter);
 	}
 
@@ -967,12 +968,11 @@ public class FakeWorld extends ServerWorld {
 		return delegate().createExplosion(entity, damageSource, behavior, pos, power, createFire, explosionSourceType);
 	}
 
-	@Override
+	//@Override
 	public Explosion createExplosion(Entity entity, DamageSource damageSource, ExplosionBehavior behavior, double x,
 			double y, double z, float power, boolean createFire, ExplosionSourceType explosionSourceType,
 			boolean particles) {
-		return delegate().createExplosion(entity, damageSource, behavior, x, y, z, power, createFire, explosionSourceType,
-				particles);
+		return delegate().createExplosion(entity, damageSource, behavior, x, y, z, power, createFire, explosionSourceType);
 	}
 
 	@Override
@@ -1191,11 +1191,11 @@ public class FakeWorld extends ServerWorld {
 		return delegate().getRandomAlivePlayer();
 	}
 
-	@Override
-	public void addFireworkParticle(double x, double y, double z, double velocityX, double velocityY, double velocityZ,
-			NbtCompound nbt) {
-		delegate().addFireworkParticle(x, y, z, velocityX, velocityY, velocityZ, nbt);
-	}
+	//@Override
+	//public void addFireworkParticle(double x, double y, double z, double velocityX, double velocityY, double velocityZ,
+	//		NbtCompound nbt) {
+	//	delegate().addFireworkParticle(x, y, z, velocityX, velocityY, velocityZ, nbt);
+	//}
 
 	@Override
 	public boolean spawnEntity(Entity entity) {
@@ -1217,20 +1217,20 @@ public class FakeWorld extends ServerWorld {
 		return delegate().getLocalDifficulty(pos);
 	}
 
-	@Override
-	public void onPlayerTeleport(ServerPlayerEntity player) {
-		delegate().onPlayerTeleport(player);
-	}
+	//@Override
+	//public void onPlayerTeleport(ServerPlayerEntity player) {
+	//	delegate().onPlayerTeleport(player);
+	//}
 
 	@Override
 	public int getAmbientDarkness() {
 		return delegate().getAmbientDarkness();
 	}
 
-	@Override
-	public void onPlayerChangeDimension(ServerPlayerEntity player) {
-		delegate().onPlayerChangeDimension(player);
-	}
+	//@Override
+	//public void onPlayerChangeDimension(ServerPlayerEntity player) {
+	//	delegate().onPlayerChangeDimension(player);
+	//}
 
 	@Override
 	public void setLightningTicksLeft(int lightningTicksLeft) {
@@ -1257,10 +1257,10 @@ public class FakeWorld extends ServerWorld {
 		return delegate().getDimension();
 	}
 
-	@Override
-	public RegistryKey<DimensionType> getDimensionKey() {
-		return delegate().getDimensionKey();
-	}
+	//@Override
+	//public RegistryKey<DimensionType> getDimensionKey() {
+	//	return delegate().getDimensionKey();
+	//}
 
 	@Override
 	public void onPlayerRespawned(ServerPlayerEntity player) {
@@ -1380,7 +1380,7 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public void emitGameEvent(GameEvent event, Vec3d emitterPos, Emitter emitter) {
+	public void emitGameEvent(RegistryEntry<GameEvent> event, Vec3d emitterPos, Emitter emitter) {
 		delegate().emitGameEvent(event, emitterPos, emitter);
 	}
 
@@ -1496,18 +1496,18 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public MapState getMapState(String id) {
+	public MapState getMapState(MapIdComponent id) {
 		return delegate().getMapState(id);
 	}
 
 	@Override
-	public void putMapState(String id, MapState state) {
+	public void putMapState(MapIdComponent id, MapState state) {
 		delegate().putMapState(id, state);
 	}
 
 	@Override
-	public int getNextMapId() {
-		return delegate().getNextMapId();
+	public MapIdComponent increaseAndGetMapId() {
+		return delegate().increaseAndGetMapId();
 	}
 
 	@Override

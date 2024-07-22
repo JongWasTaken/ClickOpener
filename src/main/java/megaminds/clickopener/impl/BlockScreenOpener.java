@@ -6,12 +6,9 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.ActionResult;
 
 public interface BlockScreenOpener extends Opener<BlockScreenOpener, BlockOpenContext> {
@@ -29,7 +26,7 @@ public interface BlockScreenOpener extends Opener<BlockScreenOpener, BlockOpenCo
 	@Override
 	default ActionResult open(BlockOpenContext context) {
 		if (context.initialStack().getCount() != 1) return ActionResult.FAIL;
-		var result = context.getBlockState().onUse(context.world(), context.player(), context.hand(), context.hitResult());
+		var result = context.getBlockState().onUse(context.world(), context.player(), context.hitResult());
 		if (result.isAccepted()) {
 			return result;
 		}
@@ -68,26 +65,18 @@ public interface BlockScreenOpener extends Opener<BlockScreenOpener, BlockOpenCo
 
 	default BlockState getBlockState(BlockOpenContext context) {
 		var block = Block.getBlockFromItem(context.getStack().getItem());
-		var nbt = context.getStack().getSubNbt(BlockItem.BLOCK_STATE_TAG_KEY);
-		if (nbt != null) {
-			nbt.putString("Name", Registries.BLOCK.getId(block).toString());
-			var state = NbtHelper.toBlockState(context.world().createCommandRegistryWrapper(RegistryKeys.BLOCK), context.getStack().getSubNbt(BlockItem.BLOCK_STATE_TAG_KEY));
-			if (!state.isAir()) return state;
+
+		if (context.getStack().getComponents().contains(DataComponentTypes.BLOCK_STATE)) {
+			return context.getStack().get(DataComponentTypes.BLOCK_STATE).applyToState(block.getDefaultState());
 		}
+
 		return block.getDefaultState();
 	}
 
 	default BlockEntity getBlockEntity(BlockOpenContext context) {
 		if (!(context.getBlockState().getBlock() instanceof BlockEntityProvider provider)) return null;
-
 		var blockEntity = provider.createBlockEntity(context.pos(), context.getBlockState());
-		var blockNbt = BlockItem.getBlockEntityNbt(context.getStack());
-		if (blockNbt != null) {
-			blockEntity.readNbt(blockNbt);
-		}
-		if (context.getStack().hasCustomName() && blockEntity instanceof LockableContainerBlockEntity lockable) {
-			lockable.setCustomName(context.getStack().getName());
-		}
+		if (blockEntity != null) blockEntity.readComponents(context.getStack());
 		return blockEntity;
 	}
 }

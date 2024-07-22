@@ -188,9 +188,9 @@ public class Config {
 			for (var s : whitelist) {
 				var arr = s.split("#",2);
 				if (arr.length == 1) {
-					config.itemList.add(new Identifier(s));
+					config.itemList.add(Identifier.of(s));
 				} else if (arr.length == 2) {
-					var id = new Identifier(arr[1]);
+					var id = Identifier.of(arr[1]);
 					if (!arr[0].equals("item")) {
 						config.blockTagsList.add(TagKey.of(RegistryKeys.BLOCK, id));
 					}

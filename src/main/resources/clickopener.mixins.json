@@ -5,6 +5,7 @@
   "mixins": [
     "CommandContextMixin",
     "ForcedScreenHandlerMixin",
+    "InventoryMixin",
     "ItemStackMixin",
     "ScreenHandlerMixin",
     "ServerPlayerEntityMixin",

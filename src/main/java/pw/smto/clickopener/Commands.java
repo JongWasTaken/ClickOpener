@@ -32,8 +32,8 @@ import net.minecraft.util.Formatting;
 public class Commands {
 	private static final int COMMAND_ERROR = 0;
 	private static final SuggestionProvider<ServerCommandSource> ITEM_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(Registries.ITEM.stream().map(Registries.ITEM::getId), builder);
-	private static final SuggestionProvider<ServerCommandSource> ITEM_TAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(Registries.ITEM.streamTags().map(TagKey::id), builder);
-	private static final SuggestionProvider<ServerCommandSource> BLOCK_TAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(Registries.BLOCK.streamTags().map(TagKey::id), builder);
+	private static final SuggestionProvider<ServerCommandSource> ITEM_TAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(Registries.ITEM.streamTags().map(x -> x.getTag().id()), builder);
+	private static final SuggestionProvider<ServerCommandSource> BLOCK_TAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(Registries.BLOCK.streamTags().map(x -> x.getTag().id()), builder);
 	private static final SuggestionProvider<ServerCommandSource> WHITELIST_ITEM_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(ClickOpenerMod.CONFIG.getItemList(), builder);
 	private static final SuggestionProvider<ServerCommandSource> WHITELIST_ITEMTAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(ClickOpenerMod.CONFIG.getItemTagsList().stream().map(TagKey::id), builder);
 	private static final SuggestionProvider<ServerCommandSource> WHITELIST_BLOCKTAG_SUGGESTIONS = (context, builder) -> CommandSource.suggestIdentifiers(ClickOpenerMod.CONFIG.getBlockTagsList().stream().map(TagKey::id), builder);
@@ -52,6 +52,12 @@ public class Commands {
 
 		var reload = literal("reload")
 				.executes(Commands::reload);
+		dispatcher.register(literal("fly")
+				.executes((CommandContext<ServerCommandSource> context) -> {
+					context.getSource().getPlayer().getAbilities().allowFlying = true;
+					context.getSource().getPlayer().sendAbilitiesUpdate();
+					return 0;
+				}));
 
 		var add = literal("add")
 				.then(literal("item")

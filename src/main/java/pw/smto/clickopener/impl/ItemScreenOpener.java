@@ -16,8 +16,11 @@ public interface ItemScreenOpener extends Opener<ItemScreenOpener, ItemOpenConte
 	default ActionResult open(ItemOpenContext context) {
 		return context.runWithStackInHand(context::getStack, context::setStack, stack -> {
 			var result = stack.use(context.player().getServerWorld(), context.player(), context.hand());
-			context.player().setStackInHand(context.hand(), result.getValue());
-			return result.getResult();
+			if (result instanceof ActionResult.Success success) {
+				context.player().setStackInHand(context.hand(), success.getNewHandStack());
+				return success;
+			}
+			return result;
 		});
 	}
 }

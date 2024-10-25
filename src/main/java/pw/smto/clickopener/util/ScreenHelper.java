@@ -29,6 +29,7 @@ public class ScreenHelper {
 		((ClosePacketSkipper)context.player()).clickopener$setSkipClosePacket(false);
 
 		if (openedScreen) {
+			//context.player().currentScreenHandler.enableSyncing();
 			context.openerConsumer(Opener::postOpen);
 		}
 

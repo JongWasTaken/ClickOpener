@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import net.minecraft.component.type.MapIdComponent;
+import net.minecraft.recipe.ServerRecipeManager;
 import net.minecraft.world.dimension.PortalForcer;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -43,10 +44,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.map.MapState;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.recipe.RecipeManager;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -77,7 +76,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.village.raid.Raid;
 import net.minecraft.village.raid.RaidManager;
@@ -105,8 +103,6 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.entity.EntityLookup;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.GameEvent.Emitter;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.poi.PointOfInterestStorage;
@@ -214,11 +210,14 @@ public class FakeWorld extends ServerWorld {
 		return null;
 	}
 
+	/*
 	@Override
 	public void replaceWithStateForNeighborUpdate(Direction direction, BlockState neighborState, BlockPos pos, BlockPos neighborPos, int flags, int maxUpdateDepth) {
 		if (context.handles(pos)) return;
 		delegate().replaceWithStateForNeighborUpdate(direction, neighborState, pos, neighborPos, flags, maxUpdateDepth);
 	}
+
+	 */
 
 	@Override
 	public void updateComparators(BlockPos pos, Block block) {
@@ -288,11 +287,6 @@ public class FakeWorld extends ServerWorld {
 	@Override
 	public int getBaseLightLevel(BlockPos pos, int ambientDarkness) {
 		return delegate().getBaseLightLevel(pos, ambientDarkness);
-	}
-
-	@Override
-	public int getTopY() {
-		return delegate().getTopY();
 	}
 
 	@Override
@@ -399,11 +393,6 @@ public class FakeWorld extends ServerWorld {
 	@Override
 	public boolean isEmittingRedstonePower(BlockPos pos, Direction direction) {
 		return delegate().isEmittingRedstonePower(pos, direction);
-	}
-
-	@Override
-	public int getMaxLightLevel() {
-		return delegate().getMaxLightLevel();
 	}
 
 	@Override
@@ -950,6 +939,7 @@ public class FakeWorld extends ServerWorld {
 		return delegate().shouldTickBlockPos(pos);
 	}
 
+	/*
 	@Override
 	public Explosion createExplosion(Entity entity, double x, double y, double z, float power,
 			ExplosionSourceType explosionSourceType) {
@@ -968,12 +958,14 @@ public class FakeWorld extends ServerWorld {
 		return delegate().createExplosion(entity, damageSource, behavior, pos, power, createFire, explosionSourceType);
 	}
 
-	//@Override
+	@Override
 	public Explosion createExplosion(Entity entity, DamageSource damageSource, ExplosionBehavior behavior, double x,
 			double y, double z, float power, boolean createFire, ExplosionSourceType explosionSourceType,
 			boolean particles) {
 		return delegate().createExplosion(entity, damageSource, behavior, x, y, z, power, createFire, explosionSourceType);
 	}
+
+	 */
 
 	@Override
 	public void addBlockEntity(BlockEntity blockEntity) {
@@ -996,11 +988,6 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public boolean canSetBlock(BlockPos pos) {
-		return delegate().canSetBlock(pos);
-	}
-
-	@Override
 	public boolean isDirectionSolid(BlockPos pos, Entity entity, Direction direction) {
 		return delegate().isDirectionSolid(pos, entity, direction);
 	}
@@ -1020,10 +1007,13 @@ public class FakeWorld extends ServerWorld {
 		delegate().calculateAmbientDarkness();
 	}
 
+	/*
 	@Override
 	public void setMobSpawnOptions(boolean spawnMonsters, boolean spawnAnimals) {
 		delegate().setMobSpawnOptions(spawnMonsters, spawnAnimals);
 	}
+
+	 */
 
 	@Override
 	public BlockPos getSpawnPos() {
@@ -1302,6 +1292,8 @@ public class FakeWorld extends ServerWorld {
 		return delegate().spawnNewEntityAndPassengers(entity);
 	}
 
+	/*
+
 	@Override
 	public Profiler getProfiler() {
 		return delegate().getProfiler();
@@ -1311,6 +1303,8 @@ public class FakeWorld extends ServerWorld {
 	public Supplier<Profiler> getProfilerSupplier() {
 		return delegate().getProfilerSupplier();
 	}
+
+	 */
 
 	@Override
 	public BiomeAccess getBiomeAccess() {
@@ -1394,6 +1388,7 @@ public class FakeWorld extends ServerWorld {
 		delegate().updateNeighborsAlways(pos, sourceBlock);
 	}
 
+	/*
 	@Override
 	public void updateNeighborsExcept(BlockPos pos, Block sourceBlock, Direction direction) {
 		delegate().updateNeighborsExcept(pos, sourceBlock, direction);
@@ -1409,6 +1404,7 @@ public class FakeWorld extends ServerWorld {
 		delegate().updateNeighbor(state, pos, sourceBlock, sourcePos, notify);
 	}
 
+	 */
 	@Override
 	public void sendEntityStatus(Entity entity, byte status) {
 		delegate().sendEntityStatus(entity, status);
@@ -1419,12 +1415,15 @@ public class FakeWorld extends ServerWorld {
 		delegate().sendEntityDamage(entity, damageSource);
 	}
 
+	/*
 	@Override
 	public Explosion createExplosion(Entity entity, DamageSource damageSource, ExplosionBehavior behavior, double x,
 			double y, double z, float power, boolean createFire, ExplosionSourceType explosionSourceType) {
 		return delegate().createExplosion(entity, damageSource, behavior, x, y, z, power, createFire,
 				explosionSourceType);
 	}
+
+	 */
 
 	@Override
 	public MinecraftServer getServer() {
@@ -1481,7 +1480,7 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public RecipeManager getRecipeManager() {
+	public ServerRecipeManager getRecipeManager() {
 		return delegate().getRecipeManager();
 	}
 

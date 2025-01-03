@@ -1,10 +1,9 @@
 package pw.smto.clickopener.impl;
 
+import net.minecraft.block.*;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
+import pw.smto.clickopener.ClickOpenerMod;
 import pw.smto.clickopener.api.Opener;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.BlockItem;
@@ -42,7 +41,10 @@ public interface BlockScreenOpener extends Opener<BlockScreenOpener, BlockOpenCo
 
 	@Override
 	default ItemStack getReplacingStack(BlockOpenContext context) {
-		return context.getBlockState().getBlock().getPickStack(context.world(), context.pos(), context.getBlockState());
+		var stack = context.getBlockState().getBlock().getPickStack(context.world(), context.pos(), context.getBlockState(), true);
+		var ent = context.world().getBlockEntity(context.pos());
+		if (ent != null) stack.applyComponentsFrom(ent.createComponentMap()); // getPickStack does not do this anymore for some reason
+		return stack;
 	}
 
 	default void onMarkDirty(BlockOpenContext context) {

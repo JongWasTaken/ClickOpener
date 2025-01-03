@@ -128,7 +128,6 @@ public class FakeWorld extends ServerWorld {
 			//set public fields from world
 			UnsafeAccess.UNSAFE.putObject(fakeWorld, RANDOM_OFFSET, context.player().getServerWorld().random);
 			//isClient is false by default
-
 			UnsafeAccess.UNSAFE.putObject(fakeWorld, CONTEXT_OFFSET, context);
 			return fakeWorld;
 		} catch (InstantiationException e) {
@@ -887,9 +886,10 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public void addParticle(ParticleEffect parameters, boolean alwaysSpawn, double x, double y, double z,
-			double velocityX, double velocityY, double velocityZ) {
-		delegate().addParticle(parameters, alwaysSpawn, x, y, z, velocityX, velocityY, velocityZ);
+	public void addParticle(
+			ParticleEffect parameters, boolean force, boolean canSpawnOnMinimal, double x, double y, double z, double velocityX, double velocityY, double velocityZ
+	) {
+		delegate().addParticle(parameters, force, canSpawnOnMinimal, x, y, z, velocityX, velocityY, velocityZ);
 	}
 
 	@Override
@@ -1447,9 +1447,21 @@ public class FakeWorld extends ServerWorld {
 	}
 
 	@Override
-	public <T extends ParticleEffect> boolean spawnParticles(ServerPlayerEntity viewer, T particle, boolean force,
-			double x, double y, double z, int count, double deltaX, double deltaY, double deltaZ, double speed) {
-		return delegate().spawnParticles(viewer, particle, force, x, y, z, count, deltaX, deltaY, deltaZ, speed);
+	public <T extends ParticleEffect> boolean spawnParticles(
+			ServerPlayerEntity viewer,
+			T parameters,
+			boolean force,
+			boolean important,
+			double x,
+			double y,
+			double z,
+			int count,
+			double offsetX,
+			double offsetY,
+			double offsetZ,
+			double speed
+	) {
+		return delegate().spawnParticles(viewer, parameters, force, important, x, y, z, count, offsetX, offsetY, offsetZ, speed);
 	}
 
 	@Override

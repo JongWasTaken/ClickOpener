@@ -12,6 +12,7 @@
   "license": "MIT",
   "icon": "assets/clickopener/icon.png",
   "environment": "*",
+  "accessWidener": "clickopener.accesswidener",
   "entrypoints": {
     "main": [
       "pw.smto.clickopener.ClickOpenerMod"
